@@ -17,6 +17,9 @@
 		// Flag to slow down how quickly user can click reset button.
 	var resetLimit = false;
 
+		// Holds timeout id's from memoryLight.
+	var timeoutArray = [];
+
 		// Pulls random id from array.
 	function getRandomId() {
 		var id = idArray[Math.floor(Math.random() * idArray.length)];
@@ -27,6 +30,8 @@
 	function setMemory(id) {
 		memoryArray.push(id);
 		setRound();
+			// Clear timeoutArray.
+		removeTimeouts();
 		memoryLight(memoryArray);
 	};
 
@@ -40,17 +45,24 @@
 	function memoryLight(memArray) {
 		
 		memArray.forEach(function (memoryId, index, array) {
-			
-			setTimeout(function() {
+				
+				// TimeoutId holds id of timeout in the current iteration of the forEach loop.
+
+			var timeoutId = setTimeout(function() {
 				$('#' + memoryId).animate({
-					opacity: 0.1
-				}, 500).animate({
 					opacity: 1
-				}, 500);
-			}, 1000 * index);
+				}, 250).animate({
+					opacity: 0.2
+				}, 250);
+			}, 500 * index);
+
+				// Store the timeout id from the iteration.
+			timeoutArray.push(timeoutId);
+			timeoutId = 0;
+
 		});
 			// Once sequence has finished, create event listeners.
-		setTimeout(setListeners, 1000 * (memArray.length));
+		setTimeout(setListeners, 500 * (memArray.length));
 	};
 
 		// Function for creating event listeners for user input.
@@ -67,6 +79,14 @@
 		});
 	};
 
+		// Function to remove timeouts stored in array, and clear array.
+	function removeTimeouts() {
+		timeoutArray.forEach(function (timeout, index, array) {
+			clearTimeout(timeout);
+		});
+		timeoutArray = [];
+	};
+
 		// Animates user input as it comes in.
 	function userLight() {
 		
@@ -74,10 +94,10 @@
 		removeListeners();
 		
 		$(this).animate({
-				opacity: 0.1
-			}, 500).animate({
 				opacity: 1
-			}, 500);
+			}, 250).animate({
+				opacity: 0.2
+			}, 250);
 
 			var id = this.id;
 		
@@ -138,11 +158,13 @@
 	function resetLimiter() {
 		if (resetLimit == false) {
 			resetLimit = true;
+			removeTimeouts();
 			resetGame();
 			setTimeout(function() {
 				resetLimit = false;
 			}, 1000);
 		};
+		
 	};
 
 		// Event listener for new game.
