@@ -20,12 +20,14 @@
 		// Holds timeout id's from memoryLight.
 	var timeoutArray = [];
 
+		
 		// Pulls random id from array.
 	function getRandomId() {
 		var id = idArray[Math.floor(Math.random() * idArray.length)];
 		setMemory(id);
 	};
 
+		
 		// Builds Simple Simon sequence, adding an id on each round.
 	function setMemory(id) {
 		memoryArray.push(id);
@@ -35,12 +37,14 @@
 		memoryLight(memoryArray);
 	};
 
+		
 		// Displays current round, then increments for next round.
 	function setRound() {
 		$('#round').text('Current round: ' + currentRound);
 		currentRound++;
 	};
 
+	
 		// Animates Simon sequence.
 	function memoryLight(memArray) {
 		
@@ -65,6 +69,7 @@
 		setTimeout(setListeners, 500 * (memArray.length));
 	};
 
+		
 		// Function for creating event listeners for user input.
 	function setListeners() {
 		idArray.forEach(function (id, index, array) {
@@ -72,12 +77,14 @@
 		});
 	};
 
+		
 		// Function for removing the event listeners for user input.
 	function removeListeners() {
 		idArray.forEach(function (id, index, array) {
 			document.getElementById(id).removeEventListener('click', userLight);
 		});
 	};
+
 
 		// Function to remove timeouts stored in array, and clear array.
 	function removeTimeouts() {
@@ -87,9 +94,12 @@
 		timeoutArray = [];
 	};
 
+	
 		// Animates user input as it comes in.
 	function userLight() {
 		
+			var id = this.id;
+
 			// Remove listeners during animation.
 		removeListeners();
 		
@@ -99,13 +109,12 @@
 				opacity: 0.2
 			}, 250);
 
-			var id = this.id;
-		
 			// Check input for correctness.
 		setTimeout(function() {
 			checkInput(id);
 		}, 500);
 	};
+
 
 		// Function for checking user input against Simon sequence.
 	function checkInput(id) {
@@ -133,6 +142,7 @@
 		
 	};
 
+		
 		// Function to end turn. Checks for and displays new high score.
 	function endGame() {
 		if (memoryArray.length - 1 > highScore) {
@@ -146,6 +156,7 @@
 
 	};
 
+		
 		// Starts new game. Resets all fields except high score. Generates first id in Simon sequence.
 	function resetGame() {
 		memoryArray = [];
@@ -154,6 +165,7 @@
 		setTimeout(getRandomId, 1000);
 	};
 
+		
 		// Limits how quickly user can reset game. (Bug fix)
 	function resetLimiter() {
 		if (resetLimit == false) {
